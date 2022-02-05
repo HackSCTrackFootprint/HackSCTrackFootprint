@@ -1,6 +1,6 @@
 const express = require('express')
 const app = express()
-const port = 3000
+const port = 80
 var cors = require('cors');
 var path = require('path');
 const axios = require('axios');
@@ -27,19 +27,21 @@ app.get('/', (req, res) => {
 })
 
 app.get('/api/car',(req,res)=>{
+    req.query.distance = 1000;
+    dataString=`{
+        "emission_factor": "commercial_vehicle-vehicle_type_hgv-fuel_source_bev-engine_size_na-vehicle_age_post_2015-vehicle_weight_gt_10t_lt_12t",
+        "parameters": {
+			"distance": ${req.query.distance},
+			"distance_unit": "mi"
+        }
+    }`;
     options={
         url: 'https://beta2.api.climatiq.io/estimate',
         method: 'POST',
         headers: headers,
         body: dataString
     };
-    dataString=`{
-        "emission_factor": "commercial_vehicle-vehicle_type_hgv-fuel_source_bev-engine_size_na-vehicle_age_post_2015-vehicle_weight_gt_10t_lt_12t",
-        "parameters": {
-			"distance": 100,
-			"distance_unit": "mi"
-        }
-    }`;
+    
     request(options, callback);
 
 
