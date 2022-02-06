@@ -17,9 +17,9 @@ var options;
 
 function callback(error, response, body) {
     if (!error && response.statusCode == 200) {
-        console.log(JSON.parse(body)['co2e']);
-        console.log(typeof body);
-        // response.send(body['co2e']);
+        // console.log(JSON.parse(body)['co2e']);
+        // console.log(typeof body);
+        return JSON.parse(body)['co2e'];
     }
 }
 
@@ -43,7 +43,7 @@ app.get('/distance',(req,res)=>{
     .then(function (response) {
         var obj = JSON.parse(JSON.stringify(response.data));
       console.log(JSON.stringify(obj['rows'][0]['elements'][0]['distance']['text']));
-     // res.send(JSON.stringify(obj['rows'][0]['elements'][0]['distance']['text']));
+     res.send(JSON.stringify(obj['rows'][0]['elements'][0]['distance']['text']));
     })
     .catch(function (error) {
       console.log(error);
