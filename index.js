@@ -17,7 +17,9 @@ var options;
 
 function callback(error, response, body) {
     if (!error && response.statusCode == 200) {
-        console.log(body);
+        console.log(JSON.parse(body)['co2e']);
+        console.log(typeof body);
+        // response.send(body['co2e']);
     }
 }
 
@@ -25,6 +27,30 @@ function callback(error, response, body) {
 app.get('/', (req, res) => {
   res.send('Hello World!')
 })
+// var axios = require('axios');
+
+var config ;
+
+app.get('/distance',(req,res)=>{
+    req.query.from =  "40.6655101,-73.89188969999998";
+    req.query.to = "40.659569,-73.933783";
+    config ={
+        method: 'get',
+        url: `https://maps.googleapis.com/maps/api/distancematrix/json?origins=${req.query.from}&destinations=${req.query.to}&key=AIzaSyDeucYZPT7OmqoWzK-I0eeXMp8lNddPYHU`,
+        headers: { }
+      };
+    axios(config)
+    .then(function (response) {
+        var obj = JSON.parse(JSON.stringify(response.data));
+      console.log(JSON.stringify(obj['rows'][0]['elements'][0]['distance']['text']));
+     // res.send(JSON.stringify(obj['rows'][0]['elements'][0]['distance']['text']));
+    })
+    .catch(function (error) {
+      console.log(error);
+    });
+
+})
+
 
 app.get('/api/car',(req,res)=>{
     req.query.distance = 1000;
@@ -43,6 +69,28 @@ app.get('/api/car',(req,res)=>{
     };
     
     request(options, callback);
+
+
+})
+app.get('/api/train',(req,res)=>{
+  
+  req.query.distance = 1000;
+  dataString=`{
+      "emission_factor": "passenger_train-route_type_commuter_rail-fuel_source_na",
+      "parameters": {
+        "passengers": 1,
+    "distance": ${req.query.distance},
+    "distance_unit": "mi"
+      }
+  }`;
+  options={
+      url: 'https://beta2.api.climatiq.io/estimate',
+      method: 'POST',
+      headers: headers,
+      body: dataString
+  };
+  
+  request(options, callback);
 
 
 })
