@@ -1,39 +1,18 @@
+var mysql = require('mysql');
 
-var express = require('express');
-var app = express();
-
-app.get('/', function (req, res) {
-   
-    var sql = require("mssql");
-
-    // config for your database
-    var config = {
-        user: 'root',
-        password: 'stevendebbybenjioscar',
-        server: 'localhost', 
-        database: 'db1' 
-    };
-
-    // connect to your database
-    sql.connect(config, function (err) {
-    
-        if (err) console.log(err);
-
-        // create Request object
-        var request = new sql.Request();
-           
-        // query to the database and get the records
-        request.query('select * from Student', function (err, recordset) {
-            
-            if (err) console.log(err)
-
-            // send records as a response
-            res.send(recordset);
-            
-        });
-    });
+var con = mysql.createConnection({
+  host: "localhost",
+  user: "root",
+  password: "stevendebbybenjioscar",
+  database: "db1"
 });
 
-var server = app.listen(5000, function () {
-    console.log('Server is running..');
+con.connect(function(err) {
+  if (err) throw err;
+  console.log("Connected!");
+  var sql = "CREATE TABLE steven (ID int NOT NULL AUTO_INCREMENT, location VARCHAR(255), mot VARCHAR(255), date VARCHAR(255), time VARCHAR(255), PRIMARY KEY (ID))";
+  con.query(sql, function (err, result) {
+    if (err) throw err;
+    console.log("Table created");
+  });
 });
