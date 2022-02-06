@@ -1,3 +1,7 @@
 [core]
+<<<<<<< HEAD
 disable_usage_reporting = False
+=======
+disable_usage_reporting = True
+>>>>>>> node
 
